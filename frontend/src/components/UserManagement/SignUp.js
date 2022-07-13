@@ -12,6 +12,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import SecurityQuestionsAnswers from './SecurityQuestionsAnswers';
+import registerUser from '../../Services/addUsers';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -30,6 +32,8 @@ const SignUp = () => {
   
   const [inputErrors, setInputErrors] = useState({});
   const [isUserSubmitted, setIsUserSubmitted] = useState(false);
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -112,6 +116,8 @@ const SignUp = () => {
   useEffect(() => {
     if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
         // call method to add user in user pool
+        registerUser(userInput)
+        navigate("/signin")
     }
 }, [userInput, inputErrors]);
 
@@ -164,7 +170,7 @@ const SignUp = () => {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} > Sign Up </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2"> Already have an account? Sign in </Link>
+                <Link href="/signin" variant="body2"> Already have an account? Sign in </Link>
               </Grid>
             </Grid>
           </Box>

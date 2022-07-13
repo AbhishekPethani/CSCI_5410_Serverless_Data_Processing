@@ -62,7 +62,6 @@ const SecurityQuestionsAnswers = ({questionVals, setQuestionVals, answers, setAn
         ...answers,
         [name]: value
       });
-      console.log(answers)
     }
 
     return (
