@@ -46,6 +46,7 @@ const SignUp = () => {
   const handleChangeSecurityKey = (e) => {
     setSecurityKey(e.target.value)
   }
+  
   // function to chech input errors
   const validateUserData = (userInput, securityKey) => {
     let errors = {}
