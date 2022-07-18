@@ -11,8 +11,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-
 import { useState } from 'react';
+import loginUser from '../../Services/authenticateSignIn';
+import { useEffect } from 'react';
 
 const theme = createTheme();
 
@@ -22,6 +23,7 @@ const SignIn = () => {
     password: '',
   })
   const [inputErrors, setInputErrors] = useState({});
+  const [isUserSubmitted, setIsUserSubmitted] = useState(false);
   const navigate = useNavigate()
 
   const validateUserData = (userInput, securityKey) => {
@@ -48,8 +50,35 @@ const SignIn = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setInputErrors(validateUserData(userInput))
-    navigate("/security_que_ans", { state: { email: userInput.email } })
+    setIsUserSubmitted(true)
   }
+
+  useEffect(() => {
+      async function login() {
+        if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
+            // call method to authenticate user in user pool
+            try{
+              const result = await loginUser(userInput)    
+              alert("Your ID and password is correct. Please provide answer to security question")
+              navigate("/security_que_ans", { state: { email: userInput.email } })
+              console.log(result)
+            }catch(err){
+              setIsUserSubmitted(false)
+              console.log(err)
+              let err_msg = ""
+              if(err.code === "UserNotConfirmedException"){
+                err_msg = "Your account is not verified. Please verify your account by clicking a verification link received on your registered email."
+              }
+              if(err.code === "NotAuthorizedException"){
+                err_msg = "Incorrect username or password."
+              }
+              alert(err_msg)
+            }
+        }
+      }
+      login()
+}, [userInput, inputErrors]);
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
