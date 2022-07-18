@@ -134,7 +134,7 @@ const SignUp = () => {
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} padding={2}>
               <Grid item xs={12} sm={6}>
                 <TextField size='small' autoComplete='off' name="firstName" value={userInput.firstName} 
                   onChange={handleChange} required fullWidth id="firstName" label="First Name" autoFocus />
