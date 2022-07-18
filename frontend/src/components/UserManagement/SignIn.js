@@ -10,8 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -25,19 +26,19 @@ const SignIn = () => {
 
   const validateUserData = (userInput, securityKey) => {
     let errors = {}
-    if(!userInput.email){
+    if (!userInput.email) {
       errors.email = "Email is required."
-    }else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userInput.email)){
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userInput.email)) {
       errors.email = "Please enter valid email address."
     }
-    if(!userInput.password){
+    if (!userInput.password) {
       errors.password = "Password is required."
     }
     return errors
   }
 
   const handleChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setUserInput({
       ...userInput,
       [name]: value
@@ -47,7 +48,7 @@ const SignIn = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setInputErrors(validateUserData(userInput))
-    navigate("/security_que_ans", {state: {email: userInput.email}})
+    navigate("/security_que_ans", { state: { email: userInput.email } })
   }
   return (
     <ThemeProvider theme={theme}>
@@ -63,21 +64,21 @@ const SignIn = () => {
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField margin="normal" required fullWidth id="email" label="User Email" 
-                      value={userInput.email} onChange={handleChange} name="email" autoFocus autoComplete='off' />
-                {inputErrors.email && <p style={{color:"red", margin:"auto"}}> {inputErrors.email}</p>}
+                <TextField margin="normal" required fullWidth id="email" label="User Email"
+                  value={userInput.email} onChange={handleChange} name="email" autoFocus autoComplete='off' />
+                {inputErrors.email && <p style={{ color: "red", margin: "auto" }}> {inputErrors.email}</p>}
               </Grid>
               <Grid item xs={12}>
                 <TextField margin="normal" required fullWidth id="password" label="Password"
-                      onChange={handleChange} value={userInput.password} name="password" type="password" autoComplete='off'/>
-                {inputErrors.password && <p style={{color:"red", margin:"auto"}}> {inputErrors.password}</p>}
+                  onChange={handleChange} value={userInput.password} name="password" type="password" autoComplete='off' />
+                {inputErrors.password && <p style={{ color: "red", margin: "auto" }}> {inputErrors.password}</p>}
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} > Sign In </Button>
             <Grid container>
               <Grid item xs />
               <Grid item>
-                <Link href={"/"} variant="body2">
+                <Link href={"/sign-up"} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
