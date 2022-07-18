@@ -12,6 +12,8 @@
     "@testing-library/user-event": "^13.5.0",
     "amazon-cognito-identity-js": "^5.2.10",
     "aws-sdk": "^2.1173.0",
+    "axios": "^0.27.2",
+    "firebase": "^9.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",

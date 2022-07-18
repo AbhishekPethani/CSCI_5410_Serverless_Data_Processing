@@ -48,7 +48,7 @@ const SignUp = () => {
   }
   
   // function to chech input errors
-  const validateUserData = (userInput, securityKey) => {
+  const validateUserData = (userInput, questionVals, answers, securityKey) => {
     let errors = {}
     if(!userInput.firstName.trim()){
       errors.firstName = "First Name is required."
@@ -110,15 +110,15 @@ const SignUp = () => {
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    setInputErrors(validateUserData(userInput,securityKey, questionVals))
+    setInputErrors(validateUserData(userInput, questionVals, answers, securityKey))
     setIsUserSubmitted(true)
   };
   
   useEffect(() => {
     if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
         // call method to add user in user pool
-        registerUser(userInput)
-        navigate("/signin")
+        registerUser(userInput, questionVals, answers, securityKey)
+        navigate("/signin")        
     }
 }, [userInput, inputErrors]);
 
