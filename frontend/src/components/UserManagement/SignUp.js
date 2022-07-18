@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import SecurityQuestionsAnswers from './SecurityQuestionsAnswers';
 import registerUser from '../../Services/addUsers';
+import storeSecurityQuestionsAnswers from '../../Services/addSecurityQuestionAnswer'
 import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
@@ -115,12 +116,24 @@ const SignUp = () => {
   };
   
   useEffect(() => {
-    if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
-        // call method to add user in user pool
-        registerUser(userInput, questionVals, answers, securityKey)
-        navigate("/signin")        
+    async function register() {
+      if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
+          // call method to add user in user pool
+          try{
+            const result = await registerUser(userInput)
+            alert("Your account is created. Please login to use our services.")
+            console.log(result)
+            storeSecurityQuestionsAnswers(userInput.email, questionVals, answers, securityKey)
+            navigate("/signin")        
+          }catch(err){
+            setIsUserSubmitted(false)
+            alert((err.message || JSON.stringify(err)) + " Please login to use our services.");
+            console.log(err)
+          }
+        }
     }
-}, [userInput, inputErrors]);
+    register()
+}, [userInput, inputErrors, isUserSubmitted]);
 
   return (
     <ThemeProvider theme={theme}>
