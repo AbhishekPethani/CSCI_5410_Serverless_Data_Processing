@@ -3,31 +3,60 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Api from "../../Services/Apis";
+import { generateRandomString } from '../../utils/utility';
 
 
 const theme = createTheme();
 
-const SignIn_Step1 = () => {
-    const navigate = useNavigate();
+const CaesarCipher = () => {
+
+    const generateCipherText = generateRandomString();
+    const navigate = useNavigate()
+
+    const [data, setData] = useState({
+        decryption_key: "",
+    })
+    const [errors, setErrors] = useState({});
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
 
-        //Check Security Question and Answer
-        navigate("/sign-in-step2");
-        console.log({
-            answer: data.get('answer'),
+        //Call Api for Caesar Cipher function
+        Api.caesar_cipher(data);
+
+        setErrors(validateData(data))
+        navigate("/dashboard")
+    }
+
+    const validateData = (data) => {
+        let errors = {}
+
+        if (!data.decryption_key) {
+            errors.decryption_key = "Decryption Key is required"
+        }
+        // else if (data.decryption_key !== decryptedCipher) {
+        //     errors.decryption_key = "Incorrect decrypted cipher text."
+        // }
+        return errors
+    }
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setData({
+            ...data,
+            [name]: value
         });
-    };
+    }
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -45,24 +74,30 @@ const SignIn_Step1 = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign In - Security Question
+                        Caesar Cipher Decryption
                     </Typography>
-                    <Typography sx={{alignContent:"center"}} component="h6">
-                        To complete the login process, please answer the security question's answer provided by you at the time of registration.
-                    </Typography>
+
+
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <label> What is your name</label>
+                                <h3>
+                                    Encoded Text: {generateCipherText}
+                                </h3>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <p>Please use the security key entered during registration to decode the text</p>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="answer"
-                                    label="Your answer"
-                                    name="answer"
+                                    id="decryption_key"
+                                    label="Enter the Key"
+                                    name="decryption_key"
+                                    value={data.decryption_key}
+                                    onChange={e => handleInputChange(e)}
                                 />
+                               {errors.decryption_key && <p style={{color:"red", margin:"auto"}}> {errors.decryption_key}</p>}
                             </Grid>
-                            
                         </Grid>
                         <Button
                             type="submit"
@@ -70,9 +105,9 @@ const SignIn_Step1 = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Submit Answer
+                            Sign In
                         </Button>
-                       
+
                     </Box>
                 </Box>
             </Container>
@@ -80,4 +115,4 @@ const SignIn_Step1 = () => {
     );
 }
 
-export default SignIn_Step1
+export default CaesarCipher

@@ -1,13 +1,18 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Typography } from "@mui/material";
 import SignUp from "./components/UserManagement/SignUp";
 import SignIn from "./components/UserManagement/SignIn";
-import SignIn_Step1 from "./components/UserManagement/SignIn_Step1";
-import SignIn_Step2 from "./components/UserManagement/SignIn_Step2";
 import NavBar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { isLoggedIn } from "./utils/utility";
-
+import AuthSecurityQueAns from "./components/UserManagement/AuthSecurityQueAns";
+import CaesarCipher from "./components/UserManagement/CaesarCipher";
+import Tours from "./components/Tours";
+import Meals from "./components/Meals";
+import BookTour from "./components/Tours/book";
+import Rooms from "./components/Rooms";
+import BookRoom from "./components/Rooms/book";
 
 const PrivateRoute = ({ children }) => {
   return isLoggedIn() ? children : <Navigate to="/sign-in" replace={true} />;
@@ -16,6 +21,7 @@ const PrivateRoute = ({ children }) => {
 const PublicRoute = ({ children }) => {
   return isLoggedIn() ? <Navigate to="/" replace={true} /> : children;
 };
+
 
 function App() {
   return (
@@ -29,11 +35,11 @@ function App() {
       <Routes>
         <Route
           exact
-          path="/"
+          path="/dashboard"
           element={
-            <PrivateRoute>
+            <PublicRoute>
               <Dashboard />
-            </PrivateRoute>
+            </PublicRoute>
           }
         />
 
@@ -56,26 +62,18 @@ function App() {
           }
         />
 
-        <Route
-          exact
-          path="/sign-in-step1"
-          element={
-            <PublicRoute>
-              <SignIn_Step1 />
-            </PublicRoute>
-          }
-        />
 
-        <Route
-          exact
-          path="/sign-in-step2"
-          element={
-            <PublicRoute>
-              <SignIn_Step1 />
-            </PublicRoute>
-          }
-        />
+        <Route exact path="/" element={<SignUp />} />
+        <Route exact path="/signin" element={<SignIn />} />
+        <Route exact path="/security_que_ans" element={<AuthSecurityQueAns />} />
+        <Route exact path="/caesar_cipher" element={<CaesarCipher />} />
+        <Route exact path="/tours" element={<Tours />} />
+        <Route exact path="/meals" element={<Meals />} />
+        <Route exact path="/tours/2/book" element={<BookTour />} />
+        <Route exact path="/rooms" element={<Rooms />} />
+        <Route exact path="/rooms/:id/book" element={<BookRoom />} />
       </Routes>
+
 
     </div>
   );

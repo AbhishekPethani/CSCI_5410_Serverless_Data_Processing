@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AppBar, Toolbar, Button, Typography, Tabs, Tab, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
 
     const [value, setValue] = useState(0);
     const theme = useTheme();
+    const navigate = useNavigate()
+
     return (
         <AppBar sx={{ background: "#063970" }} position="static">
             <Toolbar>
@@ -21,9 +24,9 @@ function Navbar() {
                     value={value}
                     onChange={(e, value) => setValue(value)}
                 >
-                    <Tab label="Tours" />
-                    <Tab label="Some" />
-                    <Tab label="Thing" />
+                    <Tab label="Tours" onClick={() => navigate("/tours")}/>
+                    <Tab label="Meals" onClick={() => navigate("/meals")}/>
+                    <Tab label="Rooms" onClick={() => navigate("/rooms")}/>
 
                 </Tabs>
 

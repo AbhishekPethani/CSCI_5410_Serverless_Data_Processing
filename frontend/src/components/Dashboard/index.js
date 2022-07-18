@@ -1,10 +1,10 @@
-/* 
-  authorName : Sanjuna Konda 
-  email : sn493898@dal.ca
-*/
-
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const theme = createTheme();
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -19,7 +19,10 @@ function Dashboard() {
   }
 
   return (
-   "Hello From Dashboard"
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      "Hello From Dashboard"
+    </ThemeProvider>
   );
 }
 

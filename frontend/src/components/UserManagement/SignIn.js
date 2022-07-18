@@ -12,76 +12,74 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 
+import { useState } from 'react';
 
 const theme = createTheme();
 
 const SignIn = () => {
-  const navigate = useNavigate();
-  
+  const [userInput, setUserInput] = useState({
+    email: '',
+    password: '',
+  })
+  const [inputErrors, setInputErrors] = useState({});
+  const navigate = useNavigate()
+
+  const validateUserData = (userInput, securityKey) => {
+    let errors = {}
+    if (!userInput.email) {
+      errors.email = "Email is required."
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userInput.email)) {
+      errors.email = "Please enter valid email address."
+    }
+    if (!userInput.password) {
+      errors.password = "Password is required."
+    }
+    return errors
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserInput({
+      ...userInput,
+      [name]: value
+    });
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    navigate("/sign-in-step1");
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
-
+    setInputErrors(validateUserData(userInput))
+    navigate("/security_que_ans", { state: { email: userInput.email } })
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', }} >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            Sign in
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
+                <TextField margin="normal" required fullWidth id="email" label="User Email"
+                  value={userInput.email} onChange={handleChange} name="email" autoFocus autoComplete='off' />
+                {inputErrors.email && <p style={{ color: "red", margin: "auto" }}> {inputErrors.email}</p>}
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
+                <TextField margin="normal" required fullWidth id="password" label="Password"
+                  onChange={handleChange} value={userInput.password} name="password" type="password" autoComplete='off' />
+                {inputErrors.password && <p style={{ color: "red", margin: "auto" }}> {inputErrors.password}</p>}
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container justifyContent="flex-end">
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} > Sign In </Button>
+            <Grid container>
+              <Grid item xs />
               <Grid item>
-                <Link href="/sign-up" variant="body2">
-                  Do not have an account? Sign Up
+                <Link href={"/sign-up"} variant="body2">
+                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
@@ -89,7 +87,7 @@ const SignIn = () => {
         </Box>
       </Container>
     </ThemeProvider>
-    );
+  )
 }
 
 export default SignIn
