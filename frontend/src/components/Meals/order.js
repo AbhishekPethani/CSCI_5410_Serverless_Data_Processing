@@ -7,65 +7,43 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import { getRoom } from "../../Services/Apis"
-import { storeBookingInfo } from "../../Services/Apis"
+import { useParams } from "react-router-dom";
+import { getMeal } from "../../Services/Apis"
+import { storeOrder } from "../../Services/Apis"
 import { useNavigate } from "react-router-dom";
-
 
 const theme = createTheme();
 
-const BookRoom = () => {
+const OrderMeal = () => {
     const navigate = useNavigate()
+    const params = useParams();
 
     const [userInput, setUserInput] = useState({
         bookingDate: '',
         checkoutDate: '',
     })
 
-    const [room, setRoom] = useState([]);
+    const [meal, setMeal] = useState([]);
+    const [totalCost, setTotalCost] = useState(0);
     const [inputErrors, setInputErrors] = useState({});
-    const [date, setDate] = useState({});
 
     useEffect(() => {
         retrieveRooms();
-    }, []);
+    }, [params.id]);
 
     const retrieveRooms = () => {
-        getRoom()
+        console.log(params.id);
+        getMeal(params.id)
             .then(response => {
-                console.log(response.data);
-                setRoom(response.data[0]);
-                var date = maxDate(response.data);
-                var formatted_date = formatDate(date);
-                console.log(formatted_date);
-                setDate(formatted_date)
+                console.log(response.data[0]);
+                setMeal(response.data[0]);
             })
             .catch(e => {
                 console.log(e);
             });
     };
 
-    const maxDate = (data) => new Date(
-        Math.max(
-            ...data.map(element => {
-                console.log(element);
-                return new Date(element.checkoutDate);
-            }),
-        ),
-    );
 
-    function formatDate(date) {
-        var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2)
-            month = '0' + month;
-        if (day.length < 2)
-            day = '0' + day;
-
-        return [year, month, day].join('-');
-    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -73,16 +51,21 @@ const BookRoom = () => {
             ...userInput,
             [name]: value
         });
-
+        console.log(e.target.name);
+        if (e.target.value != undefined && e.target.name == "quantity") {
+            calculateCost(e.target.value)
+        }
     }
 
-    const validateUserData = (userInput) => {
+    const calculateCost = (quantity) => {
+        const newCost = parseInt(quantity) * parseInt(meal.price)    //Cost of the Room
+        setTotalCost(newCost)
+    }
+
+    const validateUserData = (userInput, securityKey) => {
         let errors = {}
-        if (userInput.bookingDate == '') {
-            errors.bookingDate = "Booking Date is required";
-        }
-        if (userInput.checkoutDate == '') {
-            errors.checkoutDate = "Checkout Date is required";
+        if (!userInput.quantity) {
+            errors.quantity = "Please enter quantity";
         }
         return errors
     }
@@ -91,18 +74,18 @@ const BookRoom = () => {
         event.preventDefault();
         setInputErrors(validateUserData(userInput))
 
-        //API CALL TO PUB SUB AND STORE USER INFORMATION
-
-        console.log("SUbmitted form");
         var data = {
-            room_id: room.room_id,
-            bookingDate: userInput.bookingDate,
-            checkoutDate: userInput.checkoutDate,
-            room_type: room.room_type,
+            foodItem: meal.food_item,
+            price: meal.price,
+            quantity: userInput.quantity,
+            item_id: meal.item_id,
+            totalCost: totalCost
         };
         console.log(data);
-        var response = await storeBookingInfo(data);
+        var response = await storeOrder(data);
         console.log(response);
+
+        console.log("SUbmitted form");
         navigate("/feedback")
     }
 
@@ -110,67 +93,63 @@ const BookRoom = () => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Typography align="center" variant="h5" gutterBottom component="div">
-                Book Tour Form
+                I am Hungry Form
             </Typography>
             <Grid component="form" alignItems="center"
                 justifyContent="center" container spacing={2} onSubmit={handleSubmit}>
                 <Grid item xs={8}>
                     <label>
-                        Room Type
+                        Food Item
                     </label>
                     <TextField
                         fullWidth
                         name="room_type"
-                        value={room.room_type}
+                        value={meal.food_item}
                         disabled={true}
                     />
                 </Grid>
                 <Grid item xs={8}>
                     <label>
-                        Price (1 Room)
+                        Price (CAD)
                     </label>
                     <TextField
                         fullWidth
                         name="price"
                         aria-readonly={true}
-                        value="500.25"  //Cost of one Room
+                        value={meal.price}
                     />
                 </Grid>
 
 
                 <Grid item xs={8}>
                     <label>
-                        Booking Date
+                        Quantity
                     </label>
                     <TextField
                         fullWidth
-                        name="bookingDate"
-                        value={userInput.bookingDate}
-                        type="date"
-                        inputProps={{ min: date, max: "2030-05-31" }}
+                        name="quantity"
+                        value={userInput.quantity}
+                        type="number"
                         aria-readonly={true}
                         onChange={handleChange}
-                        error={inputErrors.bookingDate}
+                        error={inputErrors.quantity}
                     />
-                    {inputErrors.bookingDate && <p style={{ color: "red", margin: "auto" }}> {inputErrors.bookingDate}</p>}
+                    {inputErrors.quantity && <p style={{ color: "red", margin: "auto" }}> {inputErrors.quantity}</p>}
                 </Grid>
 
                 <Grid item xs={8}>
-                    <label>
-                        Checkout Date
-                    </label>
                     <TextField
                         fullWidth
-                        name="checkoutDate"
-                        type="date"
-                        value={userInput.checkoutDate}
-                        inputProps={{ min: date, max: "2030-05-31" }}
+                        name="totalCost"
+                        label="Total Cost (CAD)"
+                        value={(totalCost)}
                         aria-readonly={true}
                         onChange={handleChange}
-                        error={inputErrors.checkoutDate}
+                        error={inputErrors.totalCost}
                     />
-                    {inputErrors.checkoutDate && <p style={{ color: "red", margin: "auto" }}> {inputErrors.checkoutDate}</p>}
                 </Grid>
+
+
                 <Grid item xs={8}>
                     <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} > Submit </Button>
                 </Grid>
@@ -180,4 +159,4 @@ const BookRoom = () => {
     )
 }
 
-export default BookRoom
+export default OrderMeal
