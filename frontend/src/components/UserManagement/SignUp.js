@@ -123,7 +123,8 @@ const SignUp = () => {
             const result = await registerUser(userInput)
             alert("Your account is created. Please login to use our services.")
             console.log(result)
-            storeSecurityQuestionsAnswers(userInput.email, questionVals, answers, securityKey)
+            storeSecurityQuestionsAnswers(userInput.email, questionVals, answers)
+            localStorage.setItem(userInput.email, securityKey);
             navigate("/signin")        
           }catch(err){
             setIsUserSubmitted(false)

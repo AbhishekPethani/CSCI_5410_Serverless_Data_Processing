@@ -56,12 +56,11 @@ const SignIn = () => {
   useEffect(() => {
       async function login() {
         if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
-            // call method to authenticate user in user pool
+            // call method to authenticate user
             try{
               const result = await loginUser(userInput)    
               alert("Your ID and password is correct. Please provide answer to security question")
               navigate("/security_que_ans", { state: { email: userInput.email } })
-              console.log(result)
             }catch(err){
               setIsUserSubmitted(false)
               console.log(err)

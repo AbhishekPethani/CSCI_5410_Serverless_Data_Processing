@@ -11,49 +11,67 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const theme = createTheme();
 
 const AuthSecurityQueAns = () => {
     const location = useLocation()
     const {email} = location.state
-    const [answers, setAnswers] = useState({
-        ans_1: "",
-        ans_2: "",
-        ans_3: ""
+    const [answer, setAnswer] = useState()
+    const [answerError, setAnswerError] = useState('');
+    const [questionAnswer, setQuestionAnswer]  = useState({
+      question: '', 
+      answer:''
     })
-    const [answerErrors, setAnswerErrors] = useState({});
-
-    let question = ["What was your childhood nickname?", "What was your childhood nickname?", "In what city did you meet your spouse / significant other?"]
+    const [isUserSubmitted, setIsUserSubmitted] = useState(false);
     const navigate = useNavigate()
 
-    const validateAnswer = (answers) => {
-        let errors = {}
-        if(!answers.ans1){
-            errors.ans1 = "Answer is required"
+    const validateAnswer = (answer) => {
+        let error = ""
+        if(!answer){
+            error = "Answer is required"
         }
-        if(!answers.ans2){
-            errors.ans2 = "Answer is required"
-        }
-        if(!answers.ans3){
-            errors.ans3 = "Answer is required"
-        }
-        return errors
+        return error
     }
 
     const handleAnswerChange = (e) => {
-        const {name, value} = e.target;
-        setAnswers({
-          ...answers,
-          [name]: value
-        });
+        setAnswer(e.target.value);
     }
     
     const handleSubmit = (event) => {
         event.preventDefault();
-        setAnswerErrors(validateAnswer(answers))
-        navigate("/caesar_cipher", {state: {email: email}})
+        setAnswerError(validateAnswer(answer))
+        setIsUserSubmitted(true)
     }
+    useEffect(()=> {
+      if (answerError.length === 0 && isUserSubmitted)  {
+        // call method to add user in user pool
+        if(questionAnswer.answer === answer){
+          alert("Your security question answer is verified. Please decrypt the given Encoded text!")
+          navigate("/caesar_cipher", {state: {email: email}})
+        }
+        else{
+          setIsUserSubmitted(false)
+          setAnswerError("Answer does not match!!")
+        }
+      }
+    }, [answer, answerError, isUserSubmitted])
+
+    useEffect(()=> {
+      const URL = "https://us-east1-serverless-final-project-15.cloudfunctions.net/auth_user_ques_ans?email="+ email +"&task=READ"
+      axios.get(URL)
+      .then((response) => {
+          setQuestionAnswer({
+            question: response.data.question,
+            answer: response.data.answer
+          })
+        })
+      .catch((error) => {
+          console.log(error)
+      })
+    }, [])
 
     return (
         <ThemeProvider theme={theme}>
@@ -64,20 +82,16 @@ const AuthSecurityQueAns = () => {
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
-                Security Questions Answers
+                Security Question Answer
               </Typography>
               <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                 <Grid container spacing={2}>
-                    {question.map((que, index) => {
-                        return (
-                            <Grid item xs={12}>
-                                <h4>{que}</h4>
-                                <TextField size='small' autoComplete='off' name={"ans_" + (index+1)} value={answers[Object.keys(answers)[index]]} 
-                                        onChange={e => handleAnswerChange(e)} required fullWidth id={"answer_" + (index+1)} />
-                                {answerErrors[Object.keys(answerErrors)[index]] && <p style={{color:"red", margin:"auto"}}> {answerErrors[Object.keys(answerErrors)[index]]}</p>}
-                            </Grid>
-                        )
-                    })}
+                    <Grid item xs={12}>
+                    {questionAnswer.question && <h4>{questionAnswer.question}</h4>}
+                      <TextField size='small' autoComplete='off' name="answer" value={answer} 
+                            onChange={e => handleAnswerChange(e)} required fullWidth id="answer"/>
+                      {answerError && <p style={{color:"red", margin:"auto"}}> {answerError}</p>}
+                    </Grid>
                 </Grid>
                 <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} > Authenticate </Button>
               </Box>
