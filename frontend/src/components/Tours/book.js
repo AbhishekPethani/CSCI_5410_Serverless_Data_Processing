@@ -6,11 +6,13 @@ import TextField from "@mui/material/TextField";
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
-
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 const BookTour = () => {
+    const navigate = useNavigate()
+
     const [userInput, setUserInput] = useState({
         name: '',
         duration: '',
@@ -51,7 +53,7 @@ const BookTour = () => {
         //API CALL TO PUB SUB AND STORE USER INFORMATION
         
         console.log("SUbmitted form");
-        // navigate("/security_que_ans", {state: {email: userInput.email}})
+        navigate("/feedback")
     }
 
     return (

@@ -15,6 +15,39 @@ export const getAllRooms = async () => {
     });
 };
 
+export const getMeals = async () => {
+    return axios({
+        method: "GET",
+        url: `https://47vlfsqggxbx3tektlcjyktxnu0mrwyr.lambda-url.us-east-1.on.aws/`
+    });
+};
+
+export const getMeal = async (food_id) => {
+    return axios({
+        method: "GET",
+        url: `https://37bh7hmypoto5uqlkz63eshazm0yenpy.lambda-url.us-east-1.on.aws/?foodId=`+food_id,
+    });
+};
+
+export const storeOrder = async (userData) => {
+    
+    return axios({
+        method: "POST",
+        url: `https://lssfq7dvah.execute-api.us-east-1.amazonaws.com/store-order`,
+        data: userData,
+    });
+};
+
+
+export const storeFeedback = async (userData) => {
+    
+    return axios({
+        method: "POST",
+        url: `https://2j4lyj2mc4.execute-api.us-east-1.amazonaws.com/store-feedback`,
+        data: userData,
+    });
+};
+
 export const getRoom = async (userData) => {
     return axios({
         method: "POST",
