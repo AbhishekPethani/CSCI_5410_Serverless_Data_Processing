@@ -58,12 +58,22 @@ export const getRoom = async (userData) => {
 
 export const storeBookingInfo = async (userData) => {
     
-    return axios({
+    return await axios({
         method: "POST",
         url: `https://vc8cixv998.execute-api.us-east-1.amazonaws.com/store-booking-info`,
         data: userData,
     });
 };
+
+export const sendMessage = async (messageInfo) => {
+    
+    return axios({
+        method: "POST",
+        url: "https://us-central1-sdpproject-355718.cloudfunctions.net/notification_info",
+        data: messageInfo,
+    })
+}
+
 export default {
     caesar_cipher,
 };
