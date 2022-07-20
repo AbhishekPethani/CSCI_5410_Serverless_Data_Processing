@@ -6,16 +6,9 @@ import MenuItem from "@mui/material/MenuItem";
 
 import { initializeApp } from "firebase/app";
 import {  getFirestore,  collection,  getDocs,  doc,  onSnapshot,} from "firebase/firestore";
-// import { firebaseConfig } from './FirebaseConfig';
-
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAyX8zOyHUWh4mQTHPtptcLEFVK1kIMhio",
-  authDomain: "sdpproject-355718.firebaseapp.com",
-  projectId: "sdpproject-355718",
-  storageBucket: "sdpproject-355718.appspot.com",
-  messagingSenderId: "954705569033",
-  appId: "1:954705569033:web:6d04936f17041c21b65fd8"
+  // add config 
 };
 
 const Notification = ({notifications, setNotifications}) => {
