@@ -8,10 +8,13 @@ import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import { getRoom } from "../../Services/Apis"
 import { storeBookingInfo, sendMessage, getMessage } from "../../Services/Apis"
+import { useNavigate } from "react-router-dom";
+
 
 const theme = createTheme();
 
 const BookRoom = () => {
+    const navigate = useNavigate()
 
     const [userInput, setUserInput] = useState({
         bookingDate: '',
@@ -120,6 +123,8 @@ const BookRoom = () => {
         console.log("cloud function: ", res)
 
         // navigate("/security_que_ans", {state: {email: userInput.email}})
+        console.log(response);
+        navigate("/feedback")
     }
 
     return (

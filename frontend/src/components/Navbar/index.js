@@ -60,6 +60,7 @@ function Navbar() {
           <Tab label="Tours" onClick={() => navigate("/tours")} />
           <Tab label="Meals" onClick={() => navigate("/meals")} />
           <Tab label="Rooms" onClick={() => navigate("/rooms")} />
+          <Tab label="Feedback" onClick={() => navigate("/feedback")}/>
         </Tabs>
         <Box sx={{ flexGrow: 0 }} style={{ display:'block', marginLeft: 'auto', marginRight: 250 }}>
           <Tooltip title="Notifications">
