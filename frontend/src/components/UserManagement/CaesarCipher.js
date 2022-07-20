@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Api from "../../Services/Apis";
 import { generateRandomString } from '../../utils/utility';
 
@@ -19,22 +19,44 @@ const theme = createTheme();
 
 const CaesarCipher = () => {
 
-    const generateCipherText = generateRandomString();
     const navigate = useNavigate()
 
-    const [data, setData] = useState({
+    const [userInput, setUserInput] = useState({
         decryption_key: "",
     })
     const [errors, setErrors] = useState({});
+    const [randomString, setRandomString] = useState('');
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        setRandomString(generateRandomString)
+    }, []);
+
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        //Call Api for Caesar Cipher function
-        Api.caesar_cipher(data);
+        setErrors(validateData(userInput))
+        console.log(errors);
+        if (!errors) {
+            var data = {
+                input: randomString,
+                key: 4,
+                // decryption_key: userInput.decryption_key,
+            };
 
-        setErrors(validateData(data))
-        navigate("/dashboard")
+            console.log(data);
+            //Call Api for Caesar Cipher function
+            var response = await Api.caesar_cipher(data);
+            console.log(response)
+            if (response.data.toLowerCase() == userInput.decryption_key.toLowerCase()) {
+                console.log("perfect you entered conrrect string");
+            } else {
+                let errors = {}
+                errors.decryption_key = "You entered wrong decryption key, please retry!!!"
+                setErrors(errors);
+            }
+            // navigate("/")
+        }
     }
 
     const validateData = (data) => {
@@ -51,8 +73,8 @@ const CaesarCipher = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setData({
-            ...data,
+        setUserInput({
+            ...userInput,
             [name]: value
         });
     }
@@ -82,7 +104,7 @@ const CaesarCipher = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <h3>
-                                    Encoded Text: {generateCipherText}
+                                    Encoded Text: {randomString}
                                 </h3>
                             </Grid>
                             <Grid item xs={12}>
@@ -93,10 +115,10 @@ const CaesarCipher = () => {
                                     id="decryption_key"
                                     label="Enter the Key"
                                     name="decryption_key"
-                                    value={data.decryption_key}
+                                    value={userInput.decryption_key}
                                     onChange={e => handleInputChange(e)}
                                 />
-                               {errors.decryption_key && <p style={{color:"red", margin:"auto"}}> {errors.decryption_key}</p>}
+                                {errors.decryption_key && <p style={{ color: "red", margin: "auto" }}> {errors.decryption_key}</p>}
                             </Grid>
                         </Grid>
                         <Button

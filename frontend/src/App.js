@@ -15,6 +15,7 @@ import Rooms from "./components/Rooms";
 import BookRoom from "./components/Rooms/book";
 import OrderMeal from "./components/Meals/order";
 import Feedback from "./components/Feedback";
+import FeedbackAnalysis from "./components/Feedback/analysis";
 
 const PrivateRoute = ({ children }) => {
   return isLoggedIn() ? children : <Navigate to="/sign-in" replace={true} />;
@@ -73,6 +74,7 @@ function App() {
         <Route exact path="/meals" element={<Meals />} />
         <Route exact path="/meals/:id/order" element={<OrderMeal />} />
         <Route exact path="/feedback/" element={<Feedback />} />
+        <Route exact path="/feedback-analysis/" element={<FeedbackAnalysis />} />
 
         <Route exact path="/tours/2/book" element={<BookTour />} />
         <Route exact path="/rooms" element={<Rooms />} />

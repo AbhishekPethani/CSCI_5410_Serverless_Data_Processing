@@ -28,6 +28,7 @@ function Navbar() {
                     <Tab label="Meals" onClick={() => navigate("/meals")}/>
                     <Tab label="Rooms" onClick={() => navigate("/rooms")}/>
                     <Tab label="Feedback" onClick={() => navigate("/feedback")}/>
+                    <Tab label="Analysis" onClick={() => navigate("/feedback-analysis")}/>
 
                 </Tabs>
 
