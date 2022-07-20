@@ -13,6 +13,8 @@ import Meals from "./components/Meals";
 import BookTour from "./components/Tours/book";
 import Rooms from "./components/Rooms";
 import BookRoom from "./components/Rooms/book";
+import OrderMeal from "./components/Meals/order";
+import Feedback from "./components/Feedback";
 
 const PrivateRoute = ({ children }) => {
   return isLoggedIn() ? children : <Navigate to="/sign-in" replace={true} />;
@@ -63,12 +65,15 @@ function App() {
         />
 
 
-        <Route exact path="/" element={<SignUp />} />
+        <Route exact path="/" element={<Dashboard />} />
         <Route exact path="/signin" element={<SignIn />} />
         <Route exact path="/security_que_ans" element={<AuthSecurityQueAns />} />
         <Route exact path="/caesar_cipher" element={<CaesarCipher />} />
         <Route exact path="/tours" element={<Tours />} />
         <Route exact path="/meals" element={<Meals />} />
+        <Route exact path="/meals/:id/order" element={<OrderMeal />} />
+        <Route exact path="/feedback/" element={<Feedback />} />
+
         <Route exact path="/tours/2/book" element={<BookTour />} />
         <Route exact path="/rooms" element={<Rooms />} />
         <Route exact path="/rooms/:id/book" element={<BookRoom />} />
