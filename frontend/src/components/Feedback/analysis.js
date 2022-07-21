@@ -7,6 +7,8 @@ import PieChart from 'react-minimal-pie-chart';
 import { getFeedbackAnalysis } from "../../Services/Apis"
 import { useState, useEffect } from 'react';
 import { VictoryPie } from "victory-pie";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 
 const theme = createTheme();
@@ -42,17 +44,31 @@ function FeedbackAnalysis() {
             <CssBaseline />
             <Container maxWidth="sm">
 
-                {/* <PieChart FullOption
-                    data={[
-                        { title: 'Positive', value: 60, color: '#198754' },
-                        { title: 'Negative', value: 40, color: '#df4759' },
-                    ]}
-                    label={(data) => (console.log(data['data']['title']))}
-                />; */}
+                <Grid container spacing={3}>
+
+                    <Grid item xs={6}>
+                        <Box sx={{
+                            border: '1px solid grey', bgcolor: 'red', width: 30,
+                            height: 30
+                        }}>
+
+                        </Box>
+                        <p>Negative Feedback: <strong>{100 - parseFloat(positiveFeedback)}</strong> %</p>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box sx={{
+                            border: '1px solid grey', bgcolor: 'green', width: 30,
+                            height: 30
+                        }}>
+
+                        </Box>
+                        <p>Positive Feedback: <strong>{parseFloat(positiveFeedback)}</strong> %</p>
+                    </Grid>
+                </Grid>
                 <VictoryPie
                     data={[
                         { x: 'Positive', y: `${positiveFeedback}` },
-                        { x: 'Negative', y: `${100-positiveFeedback}` },
+                        { x: 'Negative', y: `${100 - positiveFeedback}` },
                     ]}
                     colorScale={["green", "red"]}
                     radius={100}
