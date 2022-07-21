@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import { getRoom } from "../../Services/Apis"
-import { storeBookingInfo } from "../../Services/Apis"
+import { storeBookingInfo, sendMessage, getMessage } from "../../Services/Apis"
 import { useNavigate } from "react-router-dom";
 
 
@@ -29,6 +29,7 @@ const BookRoom = () => {
         retrieveRooms();
     }, []);
 
+
     const retrieveRooms = () => {
         getRoom()
             .then(response => {
@@ -43,6 +44,8 @@ const BookRoom = () => {
                 console.log(e);
             });
     };
+
+   
 
     const maxDate = (data) => new Date(
         Math.max(
@@ -91,7 +94,7 @@ const BookRoom = () => {
         event.preventDefault();
         setInputErrors(validateUserData(userInput))
 
-        //API CALL TO PUB SUB AND STORE USER INFORMATION
+        //STORE USER INFORMATION
 
         console.log("SUbmitted form");
         var data = {
@@ -102,6 +105,24 @@ const BookRoom = () => {
         };
         console.log(data);
         var response = await storeBookingInfo(data);
+        const msg = response.data.message
+        var finalMessage= '';
+
+        if(msg == 'Room booked.'){
+            finalMessage = `Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
+        }
+
+        console.log("Lambda reponse: ", finalMessage);
+
+        const messageInfo = {
+            topicPath: "projects/sdpproject-355718/topics/roomBooking",
+            userId: "dv@gmail.com",
+            pubsubMessage: finalMessage
+        }
+        const res = await sendMessage(messageInfo)
+        console.log("cloud function: ", res)
+
+        // navigate("/security_que_ans", {state: {email: userInput.email}})
         console.log(response);
         navigate("/feedback")
     }

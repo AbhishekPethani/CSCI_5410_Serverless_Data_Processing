@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import PieChart from 'react-minimal-pie-chart';
 import { getFeedbackAnalysis } from "../../Services/Apis"
 import { useState, useEffect } from 'react';
 import { VictoryPie } from "victory-pie";
@@ -19,7 +18,7 @@ function FeedbackAnalysis() {
 
     const [positiveFeedback, setPositiveFeedback] = useState();
     const [negativeFeedback, setNegativeFeedback] = useState();
-    const [data, setData] = useState([{}]);
+
     useEffect(() => {
         retrieveFeedbackAnalysis();
     }, []);
@@ -31,7 +30,7 @@ function FeedbackAnalysis() {
             .then(response => {
                 console.log(response);
                 setPositiveFeedback(parseInt(response.data.positive_feedback_prcnt));
-                setNegativeFeedback(parseInt(response.data.negative_feedback_prcnt));
+                setNegativeFeedback(100 - (parseInt(response.data.positive_feedback_prcnt)));
             })
             .catch(e => {
                 console.log(e);
@@ -67,8 +66,8 @@ function FeedbackAnalysis() {
                 </Grid>
                 <VictoryPie
                     data={[
-                        { x: 'Positive', y: `${positiveFeedback}` },
-                        { x: 'Negative', y: `${100 - positiveFeedback}` },
+                        { x: 'Positive', y: positiveFeedback },
+                        { x: 'Negative', y: negativeFeedback },
                     ]}
                     colorScale={["green", "red"]}
                     radius={100}

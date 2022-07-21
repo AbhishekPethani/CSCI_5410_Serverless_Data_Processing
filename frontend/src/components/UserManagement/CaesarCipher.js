@@ -37,7 +37,7 @@ const CaesarCipher = () => {
 
         setErrors(validateData(userInput))
         console.log(errors);
-        if (!errors) {
+        // if (!errors) {
             var data = {
                 input: randomString,
                 key: 4,
@@ -49,14 +49,14 @@ const CaesarCipher = () => {
             var response = await Api.caesar_cipher(data);
             console.log(response)
             if (response.data.toLowerCase() == userInput.decryption_key.toLowerCase()) {
-                console.log("perfect you entered conrrect string");
+                console.log("perfect you entered correct string");
             } else {
                 let errors = {}
                 errors.decryption_key = "You entered wrong decryption key, please retry!!!"
                 setErrors(errors);
             }
-            // navigate("/")
-        }
+            navigate("/rooms")
+        // }
     }
 
     const validateData = (data) => {
