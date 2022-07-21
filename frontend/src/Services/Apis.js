@@ -2,9 +2,12 @@ import axios from "axios";
 
 
 //Caesar Cipher check from Lambda
-const caesar_cipher = data => {
-    return "hello";
-    // return json_api.post("/houses", data);
+const caesar_cipher = userData => {
+    return axios({
+        method: "POST",
+        url: `https://snkzertx7jitqrsqwbea4e2tmi0tbjvq.lambda-url.us-east-1.on.aws/`,
+        data: userData,
+    });
 };
 
 
@@ -42,9 +45,16 @@ export const storeOrder = async (userData) => {
 export const storeFeedback = async (userData) => {
     
     return axios({
-        method: "POST",
-        url: `https://2j4lyj2mc4.execute-api.us-east-1.amazonaws.com/store-feedback`,
+        method: "GET",
+        url: `https://us-central1-serverless-project-g16.cloudfunctions.net/feedback_sentiment_analysis?feedback=${userData.feedback}%20was%20bad%20and%20dirty&email=shelja86@gmail.com`,
         data: userData,
+    });
+};
+
+export const getFeedbackAnalysis = async () => {
+    return axios({
+        method: "GET",
+        url: `https://us-central1-serverless-project-g16.cloudfunctions.net/feedback_analytics_fetch`,
     });
 };
 

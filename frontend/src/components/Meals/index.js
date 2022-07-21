@@ -47,6 +47,9 @@ const Meals = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <Typography align="center" variant="h5" gutterBottom component="div">
+                Food Menu
+            </Typography>
             <Grid container spacing={4} sx={{ m: 2 }}>
 
                 {meals.map((meal) => (
@@ -55,8 +58,8 @@ const Meals = () => {
                             <CardMedia
                                 component="img"
                                 alt="green iguana"
-                                height="140"
-                                image=""
+                                height="300"
+                                image={meal.image_url}
                             />
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="div">
