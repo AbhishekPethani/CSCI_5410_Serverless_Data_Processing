@@ -10,17 +10,20 @@ import AuthSecurityQueAns from "./components/UserManagement/AuthSecurityQueAns";
 import CaesarCipher from "./components/UserManagement/CaesarCipher";
 import Tours from "./components/Tours";
 import Meals from "./components/Meals";
-import BookTour from "./components/Tours/book";
 import Rooms from "./components/Rooms";
 import BookRoom from "./components/Rooms/book";
 import OrderMeal from "./components/Meals/order";
 import Feedback from "./components/Feedback";
+import FeedbackAnalysis from "./components/Feedback/analysis";
+import RecommendTour from "./components/Tours/recommend";
+import Invoice from "./components/Invoice";
 
 const PrivateRoute = ({ children }) => {
   return isLoggedIn() ? children : <Navigate to="/sign-in" replace={true} />;
 };
 
 const PublicRoute = ({ children }) => {
+  console.log(children);
   return isLoggedIn() ? <Navigate to="/" replace={true} /> : children;
 };
 
@@ -65,18 +68,20 @@ function App() {
         />
 
 
-        <Route exact path="/" element={<Dashboard />} />
+        <Route exact path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route exact path="/signin" element={<SignIn />} />
         <Route exact path="/security_que_ans" element={<AuthSecurityQueAns />} />
         <Route exact path="/caesar_cipher" element={<CaesarCipher />} />
         <Route exact path="/tours" element={<Tours />} />
-        <Route exact path="/meals" element={<Meals />} />
-        <Route exact path="/meals/:id/order" element={<OrderMeal />} />
-        <Route exact path="/feedback/" element={<Feedback />} />
+        <Route exact path="/recommend-tour" element={<PrivateRoute><RecommendTour /></PrivateRoute>} />
+        <Route exact path="/meals" element={<PrivateRoute><Meals /></PrivateRoute>} />
+        <Route exact path="/meals/:id/order" element={<PrivateRoute><OrderMeal /></PrivateRoute>} />
+        <Route exact path="/feedback/" element={<PrivateRoute><Feedback /></PrivateRoute>} />
+        <Route exact path="/feedback-analysis/" element={<PrivateRoute><FeedbackAnalysis /></PrivateRoute>} />
+        <Route exact path="/invoice/" element={<PrivateRoute><Invoice /></PrivateRoute>} />
 
-        <Route exact path="/tours/2/book" element={<BookTour />} />
         <Route exact path="/rooms" element={<Rooms />} />
-        <Route exact path="/rooms/:id/book" element={<BookRoom />} />
+        <Route exact path="/rooms/:id/book" element={<PrivateRoute><BookRoom /></PrivateRoute>} />
       </Routes>
 
 

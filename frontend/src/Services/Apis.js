@@ -2,9 +2,12 @@ import axios from "axios";
 
 
 //Caesar Cipher check from Lambda
-const caesar_cipher = data => {
-    return "hello";
-    // return json_api.post("/houses", data);
+const caesar_cipher = userData => {
+    return axios({
+        method: "POST",
+        url: `https://snkzertx7jitqrsqwbea4e2tmi0tbjvq.lambda-url.us-east-1.on.aws/`,
+        data: userData,
+    });
 };
 
 
@@ -12,6 +15,13 @@ export const getAllRooms = async () => {
     return axios({
         method: "GET",
         url: `https://4jyhjxmmhtkne4bzf4z2ix6coi0jftck.lambda-url.us-east-1.on.aws/`
+    });
+};
+
+export const getAllTours = async () => {
+    return axios({
+        method: "GET",
+        url: `https://k65jz564duryjwgjniuza3xdii0vfcmt.lambda-url.us-east-1.on.aws/`
     });
 };
 
@@ -29,6 +39,13 @@ export const getMeal = async (food_id) => {
     });
 };
 
+
+export const getTour = async (tour_id) => {
+    return axios({
+        method: "GET",
+        url: `https://q55js3go3fkuoloktm2ywspsia0iuoql.lambda-url.us-east-1.on.aws/?tour_id=`+tour_id,
+    });
+};
 export const storeOrder = async (userData) => {
     
     return axios({
@@ -42,16 +59,23 @@ export const storeOrder = async (userData) => {
 export const storeFeedback = async (userData) => {
     
     return axios({
-        method: "POST",
-        url: `https://2j4lyj2mc4.execute-api.us-east-1.amazonaws.com/store-feedback`,
+        method: "GET",
+        url: `https://us-central1-serverless-project-g16.cloudfunctions.net/feedback_sentiment_analysis?feedback=${userData.feedback}%20was%20bad%20and%20dirty&email=shelja86@gmail.com`,
         data: userData,
+    });
+};
+
+export const getFeedbackAnalysis = async () => {
+    return axios({
+        method: "GET",
+        url: `https://us-central1-serverless-project-g16.cloudfunctions.net/feedback_analytics_fetch`,
     });
 };
 
 export const getRoom = async (userData) => {
     return axios({
-        method: "POST",
-        url: `https://ealmiun7hmaxwh6to72wijzxgu0rvlyy.lambda-url.us-east-1.on.aws/`,
+        method: "GET",
+        url: `https://ealmiun7hmaxwh6to72wijzxgu0rvlyy.lambda-url.us-east-1.on.aws/?room_id=${userData}`,
         data: { "some": "101" }
     });
 };
@@ -61,6 +85,15 @@ export const storeBookingInfo = async (userData) => {
     return await axios({
         method: "POST",
         url: `https://vc8cixv998.execute-api.us-east-1.amazonaws.com/store-booking-info`,
+        data: userData,
+    });
+};
+
+export const storeTour = async (userData) => {
+    
+    return await axios({
+        method: "POST",
+        url: `	https://vc8cixv998.execute-api.us-east-1.amazonaws.com/store-tour-booking`,
         data: userData,
     });
 };

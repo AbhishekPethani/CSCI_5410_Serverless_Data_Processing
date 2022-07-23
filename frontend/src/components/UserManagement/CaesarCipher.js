@@ -9,8 +9,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Api from "../../Services/Apis";
 import { generateRandomString } from '../../utils/utility';
 
@@ -19,40 +19,61 @@ const theme = createTheme();
 
 const CaesarCipher = () => {
 
-    const generateCipherText = generateRandomString();
     const navigate = useNavigate()
+    const { email } = useLocation().state
 
-    const [data, setData] = useState({
+    const [userInput, setUserInput] = useState({
         decryption_key: "",
     })
     const [errors, setErrors] = useState({});
+    const [randomString, setRandomString] = useState('');
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        setRandomString(generateRandomString)
+
+    }, []);
+
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        if (validateData(userInput)) {
+            var data = {
+                input: randomString,
+                key: parseInt(localStorage.getItem(email)),
+                // decryption_key: userInput.decryption_key,
+            };
 
-        //Call Api for Caesar Cipher function
-        Api.caesar_cipher(data);
-
-        setErrors(validateData(data))
-        navigate("/dashboard")
+            console.log(data);
+            //Call Api for Caesar Cipher function
+            var response = await Api.caesar_cipher(data);
+            console.log(response)
+            if (response.data.toLowerCase() == userInput.decryption_key.toLowerCase()) {
+                console.log("perfect you entered correct string");
+                navigate("/rooms")
+            } else {
+                let errors = {}
+                errors.decryption_key = "You entered wrong decryption key, please retry!!!"
+                setErrors(errors);
+            }
+        }
     }
 
     const validateData = (data) => {
         let errors = {}
 
+        let formIsValid = true;
         if (!data.decryption_key) {
+            formIsValid = false;
             errors.decryption_key = "Decryption Key is required"
         }
-        // else if (data.decryption_key !== decryptedCipher) {
-        //     errors.decryption_key = "Incorrect decrypted cipher text."
-        // }
-        return errors
+        setErrors(errors);
+        return formIsValid;
     }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setData({
-            ...data,
+        setUserInput({
+            ...userInput,
             [name]: value
         });
     }
@@ -82,7 +103,7 @@ const CaesarCipher = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <h3>
-                                    Encoded Text: {generateCipherText}
+                                    Encoded Text: {randomString}
                                 </h3>
                             </Grid>
                             <Grid item xs={12}>
@@ -91,12 +112,12 @@ const CaesarCipher = () => {
                                     required
                                     fullWidth
                                     id="decryption_key"
-                                    label="Enter the Key"
+                                    label="Enter the Decoded text using the key"
                                     name="decryption_key"
-                                    value={data.decryption_key}
+                                    value={userInput.decryption_key}
                                     onChange={e => handleInputChange(e)}
                                 />
-                               {errors.decryption_key && <p style={{color:"red", margin:"auto"}}> {errors.decryption_key}</p>}
+                                {errors.decryption_key && <p style={{ color: "red", margin: "auto" }}> {errors.decryption_key}</p>}
                             </Grid>
                         </Grid>
                         <Button

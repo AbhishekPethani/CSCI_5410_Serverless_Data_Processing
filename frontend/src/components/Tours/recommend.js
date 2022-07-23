@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
-const BookTour = () => {
+const RecommendTour = () => {
     const navigate = useNavigate()
 
     const [userInput, setUserInput] = useState({
@@ -38,22 +38,42 @@ const BookTour = () => {
         setCost(newCost)
     }
 
-    const validateUserData = (userInput, securityKey) => {
+    const validateUserData = (userInput) => {
         let errors = {}
+        let formIsValid = true;
         if (!userInput.duration) {
+            formIsValid = false;
             errors.duration = "Duration period is required";
         }
-        return errors
+        if (!userInput.people) {
+            formIsValid = false;
+            errors.people = "Number of People are required";
+        }
+
+        setInputErrors(errors);
+        return formIsValid;
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setInputErrors(validateUserData(userInput))
 
         //API CALL TO PUB SUB AND STORE USER INFORMATION
-        
-        console.log("SUbmitted form");
-        navigate("/feedback")
+
+        if (validateUserData(userInput)) {
+            var data = {
+                duration: userInput.duration,
+                people: userInput.people,
+              
+            };
+            console.log(data);
+
+            // Recommend Tours Api
+            
+            // var response = await storeBookingInfo(data);
+
+            navigate("/feedback")
+        }
+      
     }
 
     return (
@@ -64,49 +84,39 @@ const BookTour = () => {
             </Typography>
             <Grid component="form" alignItems="center"
                 justifyContent="center" container spacing={2} onSubmit={handleSubmit}>
-                <Grid item xs={8}>
-                    <TextField
-                        fullWidth
-                        name="destination"
-                        label="Destination"
-                        value={userInput.name}
-                        onChange={handleChange}
-                        error={inputErrors.name}
-                    />
-                </Grid>
-                <Grid item xs={8}>
-                    <TextField
-                        fullWidth
-                        name="price"
-                        label="Price (1 Room)"
-                        aria-readonly={true}
-                        value="500.25"  //Cost of one Room
-                    />
-                </Grid>
+
                 <Grid item xs={8}>
 
                     <TextField
                         fullWidth
                         name="duration"
+                        type={"number"}
                         label="Enter number of days for stay"
                         value={userInput.duration}
                         onChange={handleChange}
-                        error={inputErrors.name}
+                        error={inputErrors.duration}
                     />
                     {inputErrors.duration && <p style={{ color: "red", margin: "auto" }}> {inputErrors.duration}</p>}
                 </Grid>
 
                 <Grid item xs={8}>
+
                     <TextField
                         fullWidth
-                        name="cost"
-                        label="Cost"
-                        value={(cost)}
-                        aria-readonly={true}
+                        name="people"
+                        label="Enter number of people"
+                        type={"number"}
+                        InputProps={{
+                            inputProps: { min: 0 }
+                          }}
+                        value={userInput.people}
                         onChange={handleChange}
-                        error={inputErrors.name}
+                        error={inputErrors.people}
                     />
+                    {inputErrors.people && <p style={{ color: "red", margin: "auto" }}> {inputErrors.people}</p>}
                 </Grid>
+
+
                 <Grid item xs={8}>
                     <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} > Submit </Button>
                 </Grid>
@@ -116,4 +126,4 @@ const BookTour = () => {
     )
 }
 
-export default BookTour
+export default RecommendTour
