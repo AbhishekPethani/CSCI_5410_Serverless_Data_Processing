@@ -9,12 +9,14 @@ import { useState, useEffect } from 'react';
 import { getRoom } from "../../Services/Apis"
 import { storeBookingInfo, sendMessage, getMessage } from "../../Services/Apis"
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 
 const theme = createTheme();
 
 const BookRoom = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const params = useParams();
 
     const [userInput, setUserInput] = useState({
         bookingDate: '',
@@ -27,11 +29,11 @@ const BookRoom = () => {
 
     useEffect(() => {
         retrieveRooms();
-    }, []);
+    }, [params.id]);
 
 
     const retrieveRooms = () => {
-        getRoom()
+        getRoom(params.id)
             .then(response => {
                 console.log(response.data);
                 setRoom(response.data[0]);
@@ -45,7 +47,7 @@ const BookRoom = () => {
             });
     };
 
-   
+
 
     const maxDate = (data) => new Date(
         Math.max(
@@ -80,51 +82,57 @@ const BookRoom = () => {
     }
 
     const validateUserData = (userInput) => {
+        let formIsValid = true;
         let errors = {}
         if (userInput.bookingDate == '') {
+            formIsValid = false;
             errors.bookingDate = "Booking Date is required";
         }
         if (userInput.checkoutDate == '') {
+            formIsValid = false;
             errors.checkoutDate = "Checkout Date is required";
         }
-        return errors
+        setInputErrors(errors);
+        return formIsValid;
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setInputErrors(validateUserData(userInput))
 
         //STORE USER INFORMATION
 
         console.log("SUbmitted form");
-        var data = {
-            room_id: room.room_id,
-            bookingDate: userInput.bookingDate,
-            checkoutDate: userInput.checkoutDate,
-            room_type: room.room_type,
-        };
-        console.log(data);
-        var response = await storeBookingInfo(data);
-        const msg = response.data.message
-        var finalMessage= '';
+        if (validateUserData(userInput)) {
+            var data = {
+                room_id: room.room_id,
+                bookingDate: userInput.bookingDate,
+                checkoutDate: userInput.checkoutDate,
+                room_type: room.room_type,
+                email: localStorage.getItem("email")
+            };
+            console.log(data);
+            var response = await storeBookingInfo(data);
+            const msg = response.data.message
+            var finalMessage = '';
 
-        if(msg == 'Room booked.'){
-            finalMessage = `Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
+            if (msg == 'Room booked.') {
+                finalMessage = `Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
+            }
+
+            console.log("Lambda reponse: ", finalMessage);
+
+            const messageInfo = {
+                topicPath: "projects/sdpproject-355718/topics/roomBooking",
+                userId: "dv@gmail.com",
+                pubsubMessage: finalMessage
+            }
+            const res = await sendMessage(messageInfo)
+            console.log("cloud function: ", res)
+
+            // navigate("/security_que_ans", {state: {email: userInput.email}})
+            console.log(response);
+            navigate("/feedback")
         }
-
-        console.log("Lambda reponse: ", finalMessage);
-
-        const messageInfo = {
-            topicPath: "projects/sdpproject-355718/topics/roomBooking",
-            userId: "dv@gmail.com",
-            pubsubMessage: finalMessage
-        }
-        const res = await sendMessage(messageInfo)
-        console.log("cloud function: ", res)
-
-        // navigate("/security_que_ans", {state: {email: userInput.email}})
-        console.log(response);
-        navigate("/feedback")
     }
 
     return (

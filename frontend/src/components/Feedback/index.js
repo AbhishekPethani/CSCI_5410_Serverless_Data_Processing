@@ -34,30 +34,35 @@ const Feedback = () => {
     }
 
     const validateUserData = (userInput) => {
+        let formIsValid = true;
         let errors = {}
         if (userInput.service == '') {
+            formIsValid = false;
             errors.service = "Please select a service";
         }
         if (!userInput.feedback) {
+            formIsValid = false;
             errors.service = "Please enter feedback";
         }
-        return errors
+        setInputErrors(errors);
+        return formIsValid;
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setInputErrors(validateUserData(userInput))
+        if (validateUserData(userInput)) {
+            var data = {
+                service: userInput.service,
+                feedback: userInput.feedback,
+                email: localStorage.getItem("email")
+            };
 
-        var data = {
-            service: userInput.service,
-            feedback: userInput.feedback,
-        };
+            var response = await storeFeedback(data);
+            console.log(response);
 
-        var response = await storeFeedback(data);
-        console.log(response);
-
-        console.log("SUbmitted Feedback");
-        navigate("/") //Change when everything performed
+            console.log("SUbmitted Feedback");
+            navigate("/tours") //Change when everything performed
+        }
     }
 
     return (
