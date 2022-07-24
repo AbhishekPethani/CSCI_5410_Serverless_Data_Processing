@@ -20,7 +20,7 @@ import RecommendTour from "./components/Tours/recommend";
 import Invoice from "./components/Invoice";
 
 const PrivateRoute = ({ children }) => {
-  return isLoggedIn() ? children : <Navigate to="/sign-in" replace={true} />;
+  return isLoggedIn() ? children : <Navigate to="/sign-up" replace={true} />;
 };
 
 const PublicRoute = ({ children }) => {
