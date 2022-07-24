@@ -64,6 +64,7 @@ function Navbar() {
           <Tab label="Rooms" onClick={() => navigate("/rooms")} />
           <Tab label="Feedback" onClick={() => navigate("/feedback")} />
           <Tab label="Feedback Analysis" onClick={() => navigate("/feedback-analysis")} />
+          <Tab label="Report" onClick={() => navigate("/visualization")} />
         </Tabs>
         {isLoggedIn() ?
           <Box sx={{ flexGrow: 0 }} style={{ display: 'block', marginLeft: 'auto', marginRight: 250 }}>

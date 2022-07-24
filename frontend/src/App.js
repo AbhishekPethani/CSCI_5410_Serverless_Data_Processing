@@ -11,6 +11,7 @@ import CaesarCipher from "./components/UserManagement/CaesarCipher";
 import Tours from "./components/Tours";
 import Meals from "./components/Meals";
 import Rooms from "./components/Rooms";
+import Visuals from "./components/Visualization/visualization";
 import BookRoom from "./components/Rooms/book";
 import OrderMeal from "./components/Meals/order";
 import Feedback from "./components/Feedback";
@@ -79,8 +80,8 @@ function App() {
         <Route exact path="/feedback/" element={<PrivateRoute><Feedback /></PrivateRoute>} />
         <Route exact path="/feedback-analysis/" element={<PrivateRoute><FeedbackAnalysis /></PrivateRoute>} />
         <Route exact path="/invoice/" element={<PrivateRoute><Invoice /></PrivateRoute>} />
-
         <Route exact path="/rooms" element={<Rooms />} />
+        <Route exact path="/visualization" element={<Visuals/>} />
         <Route exact path="/rooms/:id/book" element={<PrivateRoute><BookRoom /></PrivateRoute>} />
       </Routes>
 

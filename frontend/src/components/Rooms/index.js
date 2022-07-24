@@ -36,8 +36,6 @@ export default function Rooms() {
                 console.log(e);
             });
     };
-
-
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
