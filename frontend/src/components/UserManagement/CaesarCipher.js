@@ -52,7 +52,7 @@ const CaesarCipher = () => {
                 navigate("/rooms")
             } else {
                 let errors = {}
-                errors.decryption_key = "You entered wrong decryption key, please retry!!!"
+                errors.decryption_key = "You entered wrong decrypted text, please retry!!!"
                 setErrors(errors);
             }
         }
@@ -64,7 +64,7 @@ const CaesarCipher = () => {
         let formIsValid = true;
         if (!data.decryption_key) {
             formIsValid = false;
-            errors.decryption_key = "Decryption Key is required"
+            errors.decryption_key = "Decrypted text is required"
         }
         setErrors(errors);
         return formIsValid;
