@@ -63,17 +63,15 @@ const RecommendTour = () => {
             var data = {
                 duration: userInput.duration,
                 people: userInput.people,
-              
+
             };
             console.log(data);
 
+            localStorage.setItem("duration",data.duration)
             // Recommend Tours Api
-            
-            // var response = await storeBookingInfo(data);
-
-            navigate("/feedback")
+            navigate("/recommended-tours-result", { state: { duration: data.duration } })
         }
-      
+
     }
 
     return (
@@ -108,7 +106,7 @@ const RecommendTour = () => {
                         type={"number"}
                         InputProps={{
                             inputProps: { min: 0 }
-                          }}
+                        }}
                         value={userInput.people}
                         onChange={handleChange}
                         error={inputErrors.people}

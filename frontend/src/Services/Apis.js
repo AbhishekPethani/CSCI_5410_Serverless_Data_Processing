@@ -18,6 +18,13 @@ export const getAllRooms = async () => {
     });
 };
 
+export const getRecommendations = async (data) => {
+    return axios({
+        method: "GET",
+        url: `https://us-central1-serverless-final-project-15.cloudfunctions.net/tour_recommendations?duration=`+data,
+    });
+};
+
 export const getAllTours = async () => {
     return axios({
         method: "GET",
@@ -46,6 +53,7 @@ export const getTour = async (tour_id) => {
         url: `https://q55js3go3fkuoloktm2ywspsia0iuoql.lambda-url.us-east-1.on.aws/?tour_id=`+tour_id,
     });
 };
+
 export const storeOrder = async (userData) => {
     
     return axios({
@@ -65,7 +73,16 @@ export const storeFeedback = async (userData) => {
     });
 };
 
+
+
 export const getFeedbackAnalysis = async () => {
+    return axios({
+        method: "GET",
+        url: `https://us-central1-serverless-project-g16.cloudfunctions.net/feedback_analytics_fetch`,
+    });
+};
+
+export const storeRecommendedTour = async () => {
     return axios({
         method: "GET",
         url: `https://us-central1-serverless-project-g16.cloudfunctions.net/feedback_analytics_fetch`,

@@ -17,6 +17,8 @@ import OrderMeal from "./components/Meals/order";
 import Feedback from "./components/Feedback";
 import FeedbackAnalysis from "./components/Feedback/analysis";
 import RecommendTour from "./components/Tours/recommend";
+import ResultRecommendTour from "./components/Tours/result-recommend";
+
 import Invoice from "./components/Invoice";
 
 const PrivateRoute = ({ children }) => {
@@ -24,7 +26,6 @@ const PrivateRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-  console.log(children);
   return isLoggedIn() ? <Navigate to="/" replace={true} /> : children;
 };
 
@@ -83,6 +84,7 @@ function App() {
         <Route exact path="/rooms" element={<Rooms />} />
         <Route exact path="/visualization" element={<Visuals/>} />
         <Route exact path="/rooms/:id/book" element={<PrivateRoute><BookRoom /></PrivateRoute>} />
+        <Route exact path="/recommended-tours-result" element={<PrivateRoute><ResultRecommendTour /></PrivateRoute>} />
       </Routes>
 
 

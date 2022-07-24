@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -12,22 +11,26 @@ import CardMedia from '@mui/material/CardMedia';
 import { getRecommendations } from "../../Services/Apis"
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { storeRecommendedTour } from '../../Services/Apis';
+import { sendMessage } from "../../Services/Apis"
+
 
 const theme = createTheme();
 
 const ResultRecommendTour = () => {
 
     const location = useLocation()
-    const {duration} = location.state
+    const { duration } = location.state
     const [tours, setTours] = useState([]);
     const navigate = useNavigate()
 
     useEffect(() => {
         retrieveMeals();
+        console.log(duration)
     }, []);
 
-    const retrieveMeals = () => {
-        getRecommendations(duration)
+    const retrieveMeals = async() => {
+        getRecommendations(localStorage.getItem("duration"))
             .then(response => {
                 console.log(response.data);
                 setTours(response.data);
@@ -37,13 +40,25 @@ const ResultRecommendTour = () => {
             });
     };
 
+    const handleBookTour = async (tour) => {
+        
+        var response = await storeRecommendedTour(tour);
 
+        const d = new Date().toLocaleString();
+        const finalMessage = `${d}, Your ${tour.tour_address} is booked and duration is ${duration} days.`
+        // console.log("Lambda reponse: ", finalMessage);
 
+        // const messageInfo = {
+        //     topicPath: "projects/sdpproject-355718/topics/roomBooking",
+        //     userId: localStorage.getItem("email"),
+        //     pubsubMessage: finalMessage
+        // }
+        // const res = await sendMessage(messageInfo)
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // navigate("/security_que_ans", { state: { email: userInput.email } })
+        console.log("SUbmitted form");
+        navigate("/feedback")
     }
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -51,33 +66,60 @@ const ResultRecommendTour = () => {
                 Food Menu
             </Typography>
             <Grid container spacing={4} sx={{ m: 2 }}>
+                <Grid item xs={4}>
+                    <Card sx={{ maxWidth: 345, background: "#F9F4D9" }}>
+                        <CardMedia
+                            component="img"
+                            alt="green iguana"
+                            height="300"
+                            image="https://catalogue.novascotia.com/ManagedMedia/26061.jpg"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                {tours.package1.tour_name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                <b>Description: </b> {tours.package1.tour_description}
+                                <br />
+                                <b>Address: </b>{tours.package1.tour_address}
+                                <br />
+                                <b>Price:  </b>{tours.package1.price}
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button variant='contained' color='success' onClick={() => handleBookTour(tours.package1)} size="small">Book Tour</Button>
 
-                {/* {tours.map((meal) => (
-                    <Grid item xs={4}>
-                        <Card sx={{ maxWidth: 345, background: "#F9F4D9" }}>
-                            <CardMedia
-                                component="img"
-                                alt="green iguana"
-                                height="300"
-                                image={meal.image_url}
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    {meal.food_item}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Finger Lickin Good!!!
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button variant='contained' color='success' onClick={() => navigate("/meals/" + meal.item_id + "/order")} size="small">Cant Wait! Order Now</Button>
-                            </CardActions>
-                        </Card>
-                    </Grid>
+                        </CardActions>
+                    </Card>
+                </Grid>
+                <Grid item xs={4}>
+                    <Card sx={{ maxWidth: 345, background: "#F9F4D9" }}>
+                        <CardMedia
+                            component="img"
+                            alt="green iguana"
+                            height="300"
+                            image="https://catalogue.novascotia.com/ManagedMedia/15595.jpg"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                {tours.package2.tour_name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                <b>Description: </b> {tours.package2.tour_description}
+                                <br />
+                                <b>Address: </b>{tours.package2.tour_address}
+                                <br />
+                                <b>Price:  </b>{tours.package2.price}
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button variant='contained' color='success' onClick={() => handleBookTour(tours.package2)} size="small">Book Tour</Button>
 
-                ))} */}
-
+                        </CardActions>
+                    </Card>
+                </Grid>
             </Grid>
+
         </ThemeProvider>
     )
 }
