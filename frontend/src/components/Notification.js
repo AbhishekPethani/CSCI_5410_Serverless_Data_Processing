@@ -28,7 +28,7 @@ const Notification = ({notifications, setNotifications}) => {
         if (user_id) {
           onSnapshot(collection(db, user_id), (doc) => {
             var messagesdict = doc.docs.map((doc) => doc.data());
-            // console.log("Hello: ", messagesdict[0]['message']);
+            console.log("Hello: ", messagesdict);
             var messages = []
             for (var i = 0; i < messagesdict.length; i++) {
                 messages.push(messagesdict[i]['message'])

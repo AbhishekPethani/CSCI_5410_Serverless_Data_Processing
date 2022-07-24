@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { getMeal } from "../../Services/Apis"
 import { storeOrder } from "../../Services/Apis"
 import { useNavigate } from "react-router-dom";
+import { sendMessage } from "../../Services/Apis"
 
 const theme = createTheme();
 
@@ -85,9 +86,31 @@ const OrderMeal = () => {
         var response = await storeOrder(data);
         console.log(response);
 
-        console.log("SUbmitted form");
+        let d = new Date().toLocaleString();
+        let message = `${d}, Your ${data.foodItem} ordered is confirmed.`
+       
+        sendMessagePubsub(message)
+        setTimeout( () => { 
+            d = new Date().toLocaleString();
+            message = `${d}, Your ${data.foodItem} is ready.`
+            sendMessagePubsub(message)
+        }, 10000)
+    
+
+        console.log("Submitted form");
         navigate("/feedback")
     }
+
+    const sendMessagePubsub = async (message) => {
+        const messageInfo = {
+            topicPath: "projects/sdpproject-355718/topics/roomBooking",
+            userId: "dv@gmail.com",
+            pubsubMessage: message
+        }
+        const res = await sendMessage(messageInfo)
+        console.log("cloud function: ", res)
+    }
+
 
     return (
         <ThemeProvider theme={theme}>

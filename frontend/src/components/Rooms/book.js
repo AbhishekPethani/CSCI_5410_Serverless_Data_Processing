@@ -108,10 +108,12 @@ const BookRoom = () => {
         const msg = response.data.message
         var finalMessage= '';
 
-        if(msg == 'Room booked.'){
-            finalMessage = `Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
-        }
+        const d = new Date().toLocaleString();
+        
+        console.log(d)
 
+        finalMessage = `${d}, Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
+        
         console.log("Lambda reponse: ", finalMessage);
 
         const messageInfo = {
@@ -122,8 +124,6 @@ const BookRoom = () => {
         const res = await sendMessage(messageInfo)
         console.log("cloud function: ", res)
 
-        // navigate("/security_que_ans", {state: {email: userInput.email}})
-        console.log(response);
         navigate("/feedback")
     }
 
