@@ -22,13 +22,13 @@ const Notification = ({notifications, setNotifications}) => {
     
     const db = getFirestore(app);
 
-    const user_id = 'dv@gmail.com';
+    const user_id = localStorage.getItem("email");
 
     useEffect(() => {
         if (user_id) {
           onSnapshot(collection(db, user_id), (doc) => {
             var messagesdict = doc.docs.map((doc) => doc.data());
-            console.log("Hello: ", messagesdict);
+            // console.log("Hello: ", messagesdict);
             var messages = []
             for (var i = 0; i < messagesdict.length; i++) {
                 messages.push(messagesdict[i]['message'])

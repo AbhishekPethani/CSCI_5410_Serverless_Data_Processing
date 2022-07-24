@@ -112,19 +112,14 @@ const BookRoom = () => {
             };
             console.log(data);
             var response = await storeBookingInfo(data);
-            const msg = response.data.message
-            var finalMessage = '';
 
             const d = new Date().toLocaleString();
-        
-            console.log(d)
-    
-            finalMessage = `${d}, Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
+            const finalMessage = `${d}, Your room ${data.room_id} is booked from ${data.bookingDate} to ${data.checkoutDate}.`
             console.log("Lambda reponse: ", finalMessage);
 
             const messageInfo = {
                 topicPath: "projects/sdpproject-355718/topics/roomBooking",
-                userId: "dv@gmail.com",
+                userId: localStorage.getItem("email"),
                 pubsubMessage: finalMessage
             }
             const res = await sendMessage(messageInfo)

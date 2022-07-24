@@ -108,7 +108,7 @@ const OrderMeal = () => {
     const sendMessagePubsub = async (message) => {
         const messageInfo = {
             topicPath: "projects/sdpproject-355718/topics/roomBooking",
-            userId: "dv@gmail.com",
+            userId: localStorage.getItem("email"),
             pubsubMessage: message
         }
         const res = await sendMessage(messageInfo)
