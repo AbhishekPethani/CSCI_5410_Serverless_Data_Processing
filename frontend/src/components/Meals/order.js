@@ -64,41 +64,45 @@ const OrderMeal = () => {
     }
 
     const validateUserData = (userInput, securityKey) => {
+        let formIsValid = true;
         let errors = {}
         if (!userInput.quantity) {
+            formIsValid = false;
             errors.quantity = "Please enter quantity";
         }
-        return errors
+        setInputErrors(errors);
+        return formIsValid;
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setInputErrors(validateUserData(userInput))
 
-        var data = {
-            foodItem: meal.food_item,
-            price: meal.price,
-            quantity: userInput.quantity,
-            item_id: meal.item_id,
-            totalCost: totalCost
-        };
-        console.log(data);
-        var response = await storeOrder(data);
-        console.log(response);
+        if (validateUserData(userInput)) {
+            var data = {
+                foodItem: meal.food_item,
+                price: meal.price,
+                quantity: userInput.quantity,
+                item_id: meal.item_id,
+                totalCost: totalCost,
+                email: localStorage.getItem("email")
+            };
+            console.log(data);
+            var response = await storeOrder(data);
+            console.log(response);
 
-        let d = new Date().toLocaleString();
-        let message = `${d}, Your ${data.foodItem} ordered is confirmed.`
-       
-        sendMessagePubsub(message)
-        setTimeout( () => { 
-            d = new Date().toLocaleString();
-            message = `${d}, Your ${data.foodItem} is ready.`
+            let d = new Date().toLocaleString();
+            let message = `${d}, Your ${data.foodItem} ordered is confirmed.`
+           
             sendMessagePubsub(message)
-        }, 10000)
-    
+            setTimeout( () => { 
+                d = new Date().toLocaleString();
+                message = `${d}, Your ${data.foodItem} is ready.`
+                sendMessagePubsub(message)
+            }, 10000)
 
-        console.log("Submitted form");
-        navigate("/feedback")
+            console.log("SUbmitted form");
+            navigate("/feedback")
+        }
     }
 
     const sendMessagePubsub = async (message) => {

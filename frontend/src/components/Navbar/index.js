@@ -17,6 +17,8 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Notification from "../Notification";
+import { isLoggedIn } from "../../utils/utility";
+
 
 function Navbar() {
   const [invisible, setInvisible] = React.useState(false);
@@ -60,41 +62,44 @@ function Navbar() {
           <Tab label="Tours" onClick={() => navigate("/tours")} />
           <Tab label="Meals" onClick={() => navigate("/meals")} />
           <Tab label="Rooms" onClick={() => navigate("/rooms")} />
-          <Tab label="Feedback" onClick={() => navigate("/feedback")}/>
-          <Tab label="Feedback Analysis" onClick={() => navigate("/feedback-analysis")}/>
+          <Tab label="Feedback" onClick={() => navigate("/feedback")} />
+          <Tab label="Feedback Analysis" onClick={() => navigate("/feedback-analysis")} />
+          <Tab label="Report" onClick={() => navigate("/visualization")} />
         </Tabs>
-        <Box sx={{ flexGrow: 0 }} style={{ display:'block', marginLeft: 'auto', marginRight: 250 }}>
-          <Tooltip title="Notifications">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Badge variant="dot" invisible={invisible} color="secondary">
-                <Button checked={!invisible} onClick={handleBadgeVisibility}>
-                  <MailIcon />
-                </Button>
-              </Badge>
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            <Notification
-              notifications={notifications}
-              setNotifications={setNotifications}
-            />
-          </Menu>
-        </Box>
+        {isLoggedIn() ?
+          <Box sx={{ flexGrow: 0 }} style={{ display: 'block', marginLeft: 'auto', marginRight: 250 }}>
+            <Tooltip title="Notifications">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Badge variant="dot" invisible={invisible} color="secondary">
+                  <Button checked={!invisible} onClick={handleBadgeVisibility}>
+                    <MailIcon />
+                  </Button>
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <Notification
+                notifications={notifications}
+                setNotifications={setNotifications}
+              />
+            </Menu>
+          </Box>
+          : ""}
       </Toolbar>
     </AppBar>
   );

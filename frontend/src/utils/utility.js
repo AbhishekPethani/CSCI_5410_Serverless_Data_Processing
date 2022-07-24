@@ -1,5 +1,6 @@
 export const isLoggedIn = () => {
-  return !!localStorage.getItem("token");
+  return !!localStorage.getItem("email");
+  // return true;
 };
 
 export const generateRandomString = () => {

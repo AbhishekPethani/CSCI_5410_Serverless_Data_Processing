@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Api from "../../Services/Apis";
 import { generateRandomString } from '../../utils/utility';
@@ -20,6 +20,7 @@ const theme = createTheme();
 const CaesarCipher = () => {
 
     const navigate = useNavigate()
+    const { email } = useLocation().state
 
     const [userInput, setUserInput] = useState({
         decryption_key: "",
@@ -29,18 +30,16 @@ const CaesarCipher = () => {
 
     useEffect(() => {
         setRandomString(generateRandomString)
+
     }, []);
 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        setErrors(validateData(userInput))
-        console.log(errors);
-        // if (!errors) {
+        if (validateData(userInput)) {
             var data = {
                 input: randomString,
-                key: 4,
+                key: parseInt(localStorage.getItem(email)),
                 // decryption_key: userInput.decryption_key,
             };
 
@@ -50,25 +49,25 @@ const CaesarCipher = () => {
             console.log(response)
             if (response.data.toLowerCase() == userInput.decryption_key.toLowerCase()) {
                 console.log("perfect you entered correct string");
+                navigate("/rooms")
             } else {
                 let errors = {}
                 errors.decryption_key = "You entered wrong decryption key, please retry!!!"
                 setErrors(errors);
             }
-            navigate("/rooms")
-        // }
+        }
     }
 
     const validateData = (data) => {
         let errors = {}
 
+        let formIsValid = true;
         if (!data.decryption_key) {
+            formIsValid = false;
             errors.decryption_key = "Decryption Key is required"
         }
-        // else if (data.decryption_key !== decryptedCipher) {
-        //     errors.decryption_key = "Incorrect decrypted cipher text."
-        // }
-        return errors
+        setErrors(errors);
+        return formIsValid;
     }
 
     const handleInputChange = (e) => {
@@ -113,7 +112,7 @@ const CaesarCipher = () => {
                                     required
                                     fullWidth
                                     id="decryption_key"
-                                    label="Enter the Key"
+                                    label="Enter the Decoded text using the key"
                                     name="decryption_key"
                                     value={userInput.decryption_key}
                                     onChange={e => handleInputChange(e)}
