@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { getAllTours,storeTour } from '../../Services/Apis';
 import { useState, useEffect } from "react";
-
+import { sendMessage } from "../../Services/Apis"
 
 
 const theme = createTheme();
@@ -50,6 +50,17 @@ const Tours = () => {
         console.log(data);
         var response = await storeTour(data);
         console.log(response);
+
+        const d = new Date().toLocaleString();
+        const finalMessage = `${d}, Your ${data.destination} is booked and duration is ${data.duration} days.`
+        // console.log("Lambda reponse: ", finalMessage);
+
+        const messageInfo = {
+            topicPath: "projects/sdpproject-355718/topics/roomBooking",
+            userId: data.email,
+            pubsubMessage: finalMessage
+        }
+        const res = await sendMessage(messageInfo)
 
         console.log("SUbmitted form");
         navigate("/feedback")
