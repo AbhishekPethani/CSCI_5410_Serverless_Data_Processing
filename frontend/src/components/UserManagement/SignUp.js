@@ -85,7 +85,7 @@ const SignUp = () => {
 
     if(!securityKey){
       errors.securityKey = "Security Key is required."
-    }else if(!/^[0-9]+$/.test(securityKey) || securityKey > 26){
+    }else if(!/^[0-9]+$/.test(securityKey) || securityKey < 1 || securityKey > 26 ){
       errors.securityKey = "Security key must be a number and beween (1, 26)."
     }
     if(!questionVals.que_1){
@@ -118,7 +118,7 @@ const SignUp = () => {
   useEffect(() => {
     async function register() {
       if (Object.keys(inputErrors).length === 0 && isUserSubmitted)  {
-          // call method to add user in user pool
+          // call method to add user in user pools
           try{
             const result = await registerUser(userInput)
             alert("Your account is created. Please login to use our services.")

@@ -8,7 +8,6 @@ const headers = {
     "Access-Control-Allow-Origin" : "*",
     "X-Requested-With" : "*"
 }
-
 const storeSecurityQuestionsAnswers = (email, questionVals, answers) => {
     // store security question, answer and key
     const questions = {
@@ -20,8 +19,7 @@ const storeSecurityQuestionsAnswers = (email, questionVals, answers) => {
                 email +"&task=WRITE&ques_ans_values={'q2': {'id': '2', 'question': '" + 
                 questions.que_2 + "', 'answer': '" + answers.ans2 +"'}, 'q3': {'id': '3', 'answer': '" + 
                 answers.ans3 + "', 'question': '" + questions.que_3 + "'}, 'q1': {'id': '1', 'question': '" +
-                questions.que_1 + "', 'answer': '" +questions.que_1 +"'}}"
-    
+                questions.que_1 + "', 'answer': '" +questions.que_1 +"'}}
     axios.get(URL)
     .then((response) => {
         console.log("User Account is created")

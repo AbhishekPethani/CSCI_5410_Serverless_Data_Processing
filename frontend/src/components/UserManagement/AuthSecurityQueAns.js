@@ -60,7 +60,8 @@ const AuthSecurityQueAns = () => {
     }, [answer, answerError, isUserSubmitted])
 
     useEffect(()=> {
-      const URL = "https://us-east1-serverless-final-project-15.cloudfunctions.net/auth_user_ques_ans?email="+ email +"&task=READ"
+      const URL = "https://us-east1-serverless-final-project-15.cloudfunctions.net/auth_user_ques_ans?email="
+                   + email +"&task=READ"
       axios.get(URL)
       .then((response) => {
           setQuestionAnswer({
